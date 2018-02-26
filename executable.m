@@ -1,13 +1,12 @@
 %executable.m
-
+clear;clc;close all
 f1=@McCT;
 
 
 F=1000; %Generic flowrate
 x1f=0.5; %Feed composition
-x1d=0.96; %Distillate mole fraction of volatile component
-%Note: Increasing x1d above 0.95 will give performance issues; %will be
-%rectified in future version
+x1d=0.98; %Distillate mole fraction of volatile component
+
 
 
 x1b=0.025; %Bottoms mole fraction of volatile component

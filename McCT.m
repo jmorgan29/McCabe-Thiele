@@ -1,21 +1,31 @@
 function[Ntray,Rmin,L,V,Lbar,Vbar,B,D]=McCT(F,x1f,x1d,x1b,Rratio,q)
 
-% F=1000; mol/hr
-% x1f=0.5;
-% x1d=0.95;
-% x1b=0.025;
-% Rratio=2;q=1;
-figure
-     %Temporarily use before making it a function of Pressure(contains
-     %x_data and y_data)
-     load('TempData');y_data=XY(:,2);x_data=XY(:,1);
+
+figure2=figure('Color',[1 1 1]);
+axes2=axes('Parent',figure2,'FontSize',12);
+box(axes2,'on')
+hold(axes2,'all')  
+
+
+  load('TempData');y_data=XY(:,2);x_data=XY(:,1);
      plot(x_data,y_data,'*')
     hold on
     plot([0 1],[0 1],'-k')
     hold on
-    a=polyfit(x_data,y_data,2);
-    syms x f
-    f=a(1)*x^2+a(2)*x+a(3);
+    
+    
+    
+
+     syms x f
+
+    beta0=[-0.87 -0.1];
+    modelfun=@(b,x)b(1)*exp(b(2)*x).*x.^2+(1-b(1)*exp(b(2)*x)).*x(:,1);
+    mdl=fitnlm(XY(:,1),XY(:,2),modelfun,beta0);
+    theta=mdl.Coefficients.Estimate;
+    f=theta(1)*exp(theta(2)*x)*x^2+(1-theta(1)*exp(theta(2)*x))*x;
+    warning off;
+    %Will get 'cannot solve symbolically; returning a numeric approximation
+    %instead'
     ezplot(f,[0 1])
     title([])
     hold on
@@ -97,4 +107,6 @@ figure
     Ntray=iter-1;
     xlim([0 1])
     ylim([0 1])
+    xlabel('x_a','FontSize',12,'FontWeight','bold')
+ylabel('y_a','FontSize',12,'FontWeight','bold')
 end
